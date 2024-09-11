@@ -1,0 +1,54 @@
+table,
+.divTable {
+    width: fit-content;
+}
+
+.tr {
+    display: flex;
+}
+
+tr,
+.tr {
+    width: fit-content;
+    height: 30px;
+}
+
+
+th,
+.th {
+    position: relative;
+}
+
+
+.resizer {
+    @apply bg-base-content;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
+}
+
+.resizer.ltr {
+    right: 0;
+}
+
+.resizer.rtl {
+    left: 0;
+}
+
+.resizer.isResizing {
+    @apply bg-primary;
+}
+
+@media (hover: hover) {
+    .resizer {
+        opacity: 0;
+    }
+
+    *:hover>.resizer {
+        opacity: 1;
+    }
+}
