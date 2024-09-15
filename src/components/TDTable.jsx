@@ -113,7 +113,7 @@ export const TDTable = ({ table, setData }) => {
                 </table>
             </div>
             <div className="pagination-controls">
-                <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="btn btn-sm hover:btn-primary h-8 px-2">
+                <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
                     <svg className='size-2 rotate-180' viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z" fill="currentColor"></path></svg>
 
                 </button>
