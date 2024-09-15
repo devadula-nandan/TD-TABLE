@@ -6,7 +6,7 @@ export const TDTable = ({ table }) => {
     // render++ >= 2 ? console.log("performance warning rendered " + render + " times") : null
     return (
         <div className="overflow-x-auto w-full">
-            <table className=" text-sm border-[1px] border-base-300 font-mono w-full"
+            <table className=" text-sm border-[1px] border-base-300 font-mono w-full overflow-hidden"
             // style={{ width: table.getCenterTotalSize() }}
             >
                 <thead className=" bg-base-300">
