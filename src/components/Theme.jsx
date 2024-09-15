@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const themes = [
     "light",
@@ -34,9 +34,12 @@ const themes = [
     "nord",
     "sunset",
 ]
-
+document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light')
 export const Theme = () => {
     const [theme, setTheme] = useState('light')
+    useEffect(() => {
+        setTheme(localStorage.getItem('theme') || 'light')
+    }, [])
     const themeItems = useMemo(() => themes.map((t) => (
         <li key={t} >
             <a
@@ -44,6 +47,7 @@ export const Theme = () => {
                 onClick={() => {
                     setTheme(t)
                     document.documentElement.setAttribute('data-theme', t)
+                    localStorage.setItem('theme', t)
                 }}
             >
                 <div data-theme={t} className='h-0 w-0 border-8 border-s-primary border-t-secondary shadow-2xl border-b-accent border-l-base-100 rounded-box'></div>{t}

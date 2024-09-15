@@ -6,14 +6,14 @@ export const TDTable = ({ table }) => {
     // render++ >= 2 ? console.log("performance warning rendered " + render + " times") : null
     return (
         <div className="overflow-x-auto w-full">
-            <table className=" text-sm border-[1px] border-base-300 transition-all"
-                style={{ width: table.getCenterTotalSize() }}
+            <table className=" text-sm border-[1px] border-base-300 font-mono w-full"
+            // style={{ width: table.getCenterTotalSize() }}
             >
                 <thead className=" bg-base-300">
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id} className=" border-b-[1px] border-base-300" onClick={() => console.log("header row clicked")}>
+                        <tr key={headerGroup.id} className=" flex border-b-[1px] border-base-300" onClick={() => console.log("header row clicked")}>
                             {headerGroup.headers.map((header) => (
-                                <th key={header.id} className=" text-left p-2 font-medium" onClick={() => console.log("header cell clicked")}
+                                <th key={header.id} className=" relative text-left p-2 font-medium whitespace-nowrap text-ellipsis" onClick={() => console.log("header cell clicked")}
                                     style={{ width: header.getSize() }}
                                     {...{
                                         colSpan: header.colSpan,
@@ -30,7 +30,7 @@ export const TDTable = ({ table }) => {
                                             onDoubleClick: () => header.column.resetSize(),
                                             onMouseDown: header.getResizeHandler(),
                                             onTouchStart: header.getResizeHandler(),
-                                            className: ` transition-all resizer ${table.options.columnResizeDirection
+                                            className: ` bg-base-content absolute w-[2px] top-0 cursor-col-resize h-full select-none touch-none transition-opacity resizer ${table.options.columnResizeDirection
                                                 } ${header.column.getIsResizing() ? 'isResizing' : ''
                                                 }`,
                                             style: {
@@ -55,11 +55,12 @@ export const TDTable = ({ table }) => {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map((row) => (
-                        <tr key={row.id} className=" border-b-[1px] border-base-300 bg-base-200 hover:bg-base-300 transition-all" onClick={() => console.log('row clicked')}>
+                        <tr key={row.id} className="flex border-b-[1px] border-base-300 bg-base-200 transition-all" onClick={() => console.log('row clicked')}>
                             {row.getVisibleCells().map((cell) => (
                                 <td style={{ width: cell.column.getSize() }}
                                     key={cell.id}
-                                    className="p-2"
+                                    className={`p-2 text-ellipsis overflow-hidden ${cell.column.getIsResizing() ? (table.options.columnResizeDirection === 'rtl' ? 'border-l-[1px] border-base-300' : 'border-r-[1px] border-base-300') : ''}`}
+                                    title={cell.getValue()}
                                     onClick={() => console.log('cell clicked')}
                                 >
                                     {flexRender(

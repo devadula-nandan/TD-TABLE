@@ -1,54 +1,35 @@
-table,
-.divTable {
-    width: fit-content;
-}
-
-.tr {
-    display: flex;
-}
-
-tr,
-.tr {
-    width: fit-content;
-    height: 30px;
-}
-
-
-th,
-.th {
-    position: relative;
-}
-
-
-.resizer {
-    @apply bg-base-content;
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    cursor: col-resize;
-    user-select: none;
-    touch-action: none;
-}
-
 .resizer.ltr {
-    right: 0;
+    @apply right-0;
+}
+
+.resizer::after {
+    @apply content-[''] absolute z-[1] w-[1px] h-full bg-base-content cursor-col-resize right-[-1px];
+}
+
+.resizer::before {
+    @apply content-[''] absolute z-10 w-[7.2px] h-[7.2px] bg-base-content cursor-col-resize right-[-3px] top-1/2 translate-y-[-50%] rotate-45;
+
 }
 
 .resizer.rtl {
-    left: 0;
+    @apply left-0;
 }
 
 .resizer.isResizing {
+    @apply bg-primary opacity-100;
+}
+
+.resizer.isResizing::after,
+.resizer.isResizing::before {
     @apply bg-primary;
 }
 
 @media (hover: hover) {
     .resizer {
-        opacity: 0;
+        @apply opacity-0;
     }
 
     *:hover>.resizer {
-        opacity: 1;
+        @apply opacity-100;
     }
 }
