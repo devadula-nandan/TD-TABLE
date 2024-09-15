@@ -7,7 +7,7 @@
 }
 
 .resizer::before {
-    @apply content-[''] absolute z-10 w-[7.2px] h-[7.2px] bg-base-content cursor-col-resize right-[-3px] top-1/2 translate-y-[-50%] rotate-45;
+    @apply content-[''] absolute z-10 w-[7.2px] h-[7.2px] bg-base-content cursor-col-resize right-[-3.18px] top-1/2 translate-y-[-50%] rotate-45;
 
 }
 
@@ -32,4 +32,8 @@
     *:hover>.resizer {
         @apply opacity-100;
     }
+}
+
+table tr:last-child {
+    border-bottom: none;
 }

@@ -9,10 +9,10 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "yarn build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.0.1",
     "@tanstack/react-table": "^8.20.5",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.45",
