@@ -19,7 +19,6 @@ const DEFAULTS = {
 const columnHelper = createColumnHelper();
 
 function App() {
-  // Add setData back to manage the data state
   const [data, setData] = React.useState(() => makeData(100));
 
   const columns = React.useMemo(
@@ -138,7 +137,6 @@ function App() {
           columnVisibility={columnVisibility}
           setColumnVisibility={setColumnVisibility}
         />
-        {/* create a sm button, with text 100000 rows, after clicking it, generate 100000 rows, and show the button text to generating, once its done, change the text to reset, which upon click, should reset the data to 100 */}
         <button className='btn btn-sm' onClick={(e) => data.length === 100000 ? setData(makeData(100)) : setData(makeData(100000))}>{data.length === 100000 ? 'Set to 100' : 'Set to 100000'}</button>
       </div>
       <Theme />
