@@ -13,14 +13,14 @@ import {
 import { TDTable } from './components/TDTable';
 
 const DEFAULTS = {
-  columnResizeMode: 'onChange', //'onEnd'
-  // columnResizeDirection: 'ltr',
+  columnResizeMode: 'onChange',
 };
 
 const columnHelper = createColumnHelper();
 
 function App() {
-  const [data, setData] = React.useState(makeData(100) || []);
+  // Add setData back to manage the data state
+  const [data, setData] = React.useState(() => makeData(100));
 
   const columns = React.useMemo(
     () => [
@@ -39,7 +39,7 @@ function App() {
         minSize: minHeaderWidth('First Name'),
       },
       {
-        accessorFn: (row) => row.lastName, // Using accessorFn
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
         cell: (info) => <i>{info.getValue()}</i>,
         header: () => <span>Last Name</span>,
@@ -67,7 +67,7 @@ function App() {
       {
         accessorKey: 'password',
         header: 'Password',
-        cell: (info) => '••••••••', // Mask password display
+        cell: () => '••••••••', // Mask password display
         size: maxDataWidth(data, 'password', 'Password'),
         minSize: minHeaderWidth('Password'),
       },
@@ -102,8 +102,6 @@ function App() {
     [data]
   );
 
-  console.log(columns, data);
-
   const [columnVisibility, setColumnVisibility] = React.useState({
     lastName: false,
   });
@@ -112,21 +110,37 @@ function App() {
     data,
     columns: columns,
     columnResizeMode: DEFAULTS.columnResizeMode,
-    state: {
-      columnVisibility,
-      // Other state settings
-    },
+    state: { columnVisibility },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     autoResetPageIndex: false,
   });
 
+  const columnSizeVars = React.useMemo(() => {
+    const headers = table.getFlatHeaders()
+    const colSizes = {}
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]
+      colSizes[`--header-${header.id}-size`] = header.getSize()
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+    }
+    return colSizes
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
+
   return (
     <>
-      <TDTable table={table} setData={setData} />
+      <TDTable table={table} setData={setData} columnSizeVars={columnSizeVars} />
 
       <div className="divider"></div>
-      <ColumnControl table={table} columnVisibility={columnVisibility} setColumnVisibility={setColumnVisibility} />
+      <div className="flex gap-1 flex-wrap">
+        <ColumnControl
+          table={table}
+          columnVisibility={columnVisibility}
+          setColumnVisibility={setColumnVisibility}
+        />
+        {/* create a sm button, with text 100000 rows, after clicking it, generate 100000 rows, and show the button text to generating, once its done, change the text to reset, which upon click, should reset the data to 100 */}
+        <button className='btn btn-sm' onClick={(e) => data.length === 100000 ? setData(makeData(100)) : setData(makeData(100000))}>{data.length === 100000 ? 'Set to 100' : 'Set to 100000'}</button>
+      </div>
       <Theme />
     </>
   );

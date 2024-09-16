@@ -2,17 +2,15 @@ import React from 'react';
 import { flexRender } from '@tanstack/react-table';
 import './TDTable.css';
 
-export const TDTable = ({ table, setData }) => {
+export const TDTable = ({ table, setData, columnSizeVars }) => {
     const { pageIndex, pageSize } = table.getState().pagination;
     const rows = table.getRowModel().rows;
-
-    // Calculate the number of empty rows to fill if less than pageSize
     const emptyRows = Math.max(0, pageSize - rows.length);
 
     return (
         <div>
             <div className="overflow-x-auto w-full border-b-[1px] border-base-300">
-                <table className="text-sm border-[1px] border-base-300 font-mono w-full overflow-hidden">
+                <table className="text-sm border-[1px] border-base-300 font-mono w-full overflow-hidden" style={columnSizeVars}>
                     <thead className="bg-base-300">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id} className="flex border-b-[1px] border-base-300">
@@ -20,7 +18,7 @@ export const TDTable = ({ table, setData }) => {
                                     <th
                                         key={header.id}
                                         className="relative text-left p-2 font-medium whitespace-nowrap text-ellipsis"
-                                        style={{ width: header.getSize() }}
+                                        style={{ width: `calc(var(--header-${header.id}-size) * 1px)` }}
                                         {...{ colSpan: header.colSpan }}
                                     >
                                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -29,7 +27,7 @@ export const TDTable = ({ table, setData }) => {
                                                 onDoubleClick: () => header.column.resetSize(),
                                                 onMouseDown: header.getResizeHandler(),
                                                 onTouchStart: header.getResizeHandler(),
-                                                className: `bg-base-content absolute w-[2px] top-0 cursor-col-resize h-full select-none touch-none transition-opacity resizer ${table.options.columnResizeDirection
+                                                className: `bg-base-content absolute w-[2px] top-0 cursor-col-resize h-full select-none transition-opacity resizer ${table.options.columnResizeDirection
                                                     } ${header.column.getIsResizing() ? 'isResizing' : ''}`,
                                                 style: {
                                                     transform:
@@ -49,14 +47,11 @@ export const TDTable = ({ table, setData }) => {
                         ))}
                     </thead>
                     <tbody>
-                        {rows.map((row, rowIndex) => (
-                            <tr
-                                key={row.id}
-                                className={`flex border-b-[1px] border-base-300 bg-base-100 transition-all group`}
-                            >
+                        {rows.map((row) => (
+                            <tr key={row.id} className={`flex border-b-[1px] border-base-300 bg-base-100 transition-all group`}>
                                 {row.getVisibleCells().map((cell) => (
                                     <td
-                                        style={{ width: cell.column.getSize() }}
+                                        style={{ width: `calc(var(--col-${cell.column.id}-size) * 1px)` }}
                                         key={cell.id}
                                         className={`p-2 text-ellipsis overflow-hidden ${cell.column.getIsResizing()
                                             ? table.options.columnResizeDirection === 'rtl'
@@ -93,7 +88,6 @@ export const TDTable = ({ table, setData }) => {
                                 </td>
                             </tr>
                         ))}
-                        {/* Add empty rows if there are less rows than page size */}
                         {Array(emptyRows)
                             .fill(null)
                             .map((_, index) => (
@@ -102,7 +96,7 @@ export const TDTable = ({ table, setData }) => {
                                         <td
                                             key={`empty-cell-${column.id}-${index}`}
                                             className="p-2 text-ellipsis overflow-hidden"
-                                            style={{ width: column.getSize() }}
+                                            style={{ width: `calc(var(--col-${column.id}-size) * 1px)` }}
                                         />
                                     ))}
                                     <td key="flexer" className="flex-grow h-9"></td>
@@ -112,18 +106,32 @@ export const TDTable = ({ table, setData }) => {
                     </tbody>
                 </table>
             </div>
-            <div className="pagination-controls">
-                <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
-                    <svg className='size-2 rotate-180' viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z" fill="currentColor"></path></svg>
+            <PaginationControls table={table} />
+        </div>
+    );
+};
 
-                </button>
-                <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
-                    <svg className='size-2' viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z" fill="currentColor"></path></svg>
-                </button>
-                <span className="px-2">
-                    Page {pageIndex + 1} of {table.getPageCount()}
-                </span>
-            </div>
+const PaginationControls = ({ table }) => {
+    const { pageIndex, pageSize } = table.getState().pagination;
+    return (
+        <div className="pagination-controls">
+            <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
+                <svg className="size-2 rotate-180" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z"
+                        fill="currentColor"
+                    />
+                </svg>
+            </button>
+            <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
+                <svg className="size-2" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z"
+                        fill="currentColor"
+                    />
+                </svg>
+            </button>
+            <span className="px-2">Page {pageIndex + 1} of {table.getPageCount()}</span>
         </div>
     );
 };
