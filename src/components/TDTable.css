@@ -24,6 +24,14 @@
     @apply bg-primary;
 }
 
+.resizer {
+    @apply opacity-10;
+}
+
+*:hover>.resizer {
+    @apply opacity-100;
+}
+
 @media (hover: hover) {
     .resizer {
         @apply opacity-0;
