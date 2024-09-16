@@ -1,15 +1,19 @@
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 
 export function makeData(rowCount) {
   return Array.from({ length: rowCount }, (_, rowIndex) => ({
     rowIndex: rowIndex + 1,
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
-    status: faker.helpers.arrayElement(['Single', 'In Relationship', 'Complicated']),
-    joined: faker.date.past(2).toISOString().split('T')[0],  // Date in past 2 years
-    role: faker.helpers.arrayElement(['Admin', 'User', 'Manager']),
+    status: faker.helpers.arrayElement([
+      "Single",
+      "In Relationship",
+      "Complicated",
+    ]),
+    joined: faker.date.past(2).toISOString().split("T")[0], // Date in past 2 years
+    role: faker.helpers.arrayElement(["Admin", "User", "Manager"]),
     password: faker.internet.password(),
-    passwordStrength: faker.helpers.arrayElement(['Weak', 'Medium', 'Strong']),
+    passwordStrength: faker.helpers.arrayElement(["Weak", "Medium", "Strong"]),
     age: faker.number.int({ min: 18, max: 65 }),
     visits: faker.number.int({ min: 0, max: 100 }),
     person1: faker.person.fullName(),
@@ -21,9 +25,6 @@ export function makeData(rowCount) {
     person7: faker.person.fullName(),
   }));
 }
-
-
-
 
 // Sets the width of the column based on the largest string in the data
 export function maxDataWidth(data, accessorKey) {
@@ -38,7 +39,7 @@ export function maxDataWidth(data, accessorKey) {
 }
 
 // Function to calculate the min width based on the header, use monospace fonts
-export function minHeaderWidth(header) {
-  const width = header.length * 8.4 + 16;
+export function minHeaderWidth(header, additional) {
+  const width = header.length * 8.4 + 16 + (additional || 0);
   return width < 48 ? 48 : width;
 }

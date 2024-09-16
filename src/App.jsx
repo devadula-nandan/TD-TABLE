@@ -7,6 +7,7 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
@@ -19,6 +20,7 @@ const DEFAULTS = {
 const columnHelper = createColumnHelper();
 
 function App() {
+  const [sorting, setSorting] = React.useState([])
   const [data, setData] = React.useState(() => makeData(100));
 
   const columns = React.useMemo(
@@ -28,14 +30,14 @@ function App() {
         header: () => <span>Row Index</span>,
         cell: (info) => info.getValue(),
         size: maxDataWidth(data, 'rowIndex', 'Row Index'),
-        minSize: minHeaderWidth('Row Index'),
+        minSize: minHeaderWidth('Row Index', 20),
       },
       {
         accessorKey: 'firstName',
         header: () => <span>First Name</span>,
         cell: (info) => info.getValue(),
         size: maxDataWidth(data, 'firstName', 'First Name'),
-        minSize: minHeaderWidth('First Name'),
+        minSize: minHeaderWidth('First Name', 20),
       },
       {
         accessorFn: (row) => row.lastName,
@@ -43,51 +45,51 @@ function App() {
         cell: (info) => <i>{info.getValue()}</i>,
         header: () => <span>Last Name</span>,
         size: maxDataWidth(data, 'lastName', 'Last Name'),
-        minSize: minHeaderWidth('Last Name'),
+        minSize: minHeaderWidth('Last Name', 20),
       },
       {
         accessorKey: 'status',
         header: 'Status',
         size: maxDataWidth(data, 'status', 'Status'),
-        minSize: minHeaderWidth('Status'),
+        minSize: minHeaderWidth('Status', 20),
       },
       {
         accessorKey: 'joined',
         header: 'Joined',
         size: maxDataWidth(data, 'joined', 'Joined'),
-        minSize: minHeaderWidth('Joined'),
+        minSize: minHeaderWidth('Joined', 20),
       },
       {
         accessorKey: 'role',
         header: 'Role',
         size: maxDataWidth(data, 'role', 'Role'),
-        minSize: minHeaderWidth('Role'),
+        minSize: minHeaderWidth('Role', 20),
       },
       {
         accessorKey: 'password',
         header: 'Password',
         cell: () => '••••••••', // Mask password display
         size: maxDataWidth(data, 'password', 'Password'),
-        minSize: minHeaderWidth('Password'),
+        minSize: minHeaderWidth('Password', 20),
       },
       {
         accessorKey: 'passwordStrength',
         header: 'Password Strength',
         size: maxDataWidth(data, 'passwordStrength', 'Password Strength'),
-        minSize: minHeaderWidth('Password Strength'),
+        minSize: minHeaderWidth('Password Strength', 20),
       },
       {
         accessorKey: 'age',
         header: () => 'Age',
         cell: (info) => info.renderValue(),
         size: maxDataWidth(data, 'age', 'Age'),
-        minSize: minHeaderWidth('Age'),
+        minSize: minHeaderWidth('Age', 20),
       },
       {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
         size: maxDataWidth(data, 'visits', 'Visits'),
-        minSize: minHeaderWidth('Visits'),
+        minSize: minHeaderWidth('Visits', 20),
       },
       ...Array(7)
         .fill(0)
@@ -95,7 +97,7 @@ function App() {
           accessorKey: `person${index + 1}`,
           header: `Person ${index + 1}`,
           size: maxDataWidth(data, `person${index + 1}`, `Person ${index + 1}`),
-          minSize: minHeaderWidth(`Person ${index + 1}`),
+          minSize: minHeaderWidth(`Person ${index + 1}`, 20),
         })),
     ],
     [data]
@@ -109,8 +111,10 @@ function App() {
     data,
     columns: columns,
     columnResizeMode: DEFAULTS.columnResizeMode,
-    state: { columnVisibility },
+    state: { columnVisibility, sorting },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     autoResetPageIndex: false,
   });

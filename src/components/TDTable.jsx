@@ -17,15 +17,39 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         key={header.id}
-                                        className="relative text-left p-2 font-medium whitespace-nowrap text-ellipsis"
+                                        onClick={header.column.getToggleSortingHandler()}
+                                        className={`flex items-center justify-between group relative text-left p-2 font-medium whitespace-nowrap text-ellipsis ${header.column.getCanSort() ? 'cursor-pointer' : ''}`}
                                         style={{ width: `calc(var(--header-${header.id}-size) * 1px)` }}
                                         {...{ colSpan: header.colSpan }}
+                                        title={
+                                            header.column.getCanSort()
+                                                ? header.column.getNextSortingOrder() === 'asc'
+                                                    ? 'Sort ascending'
+                                                    : header.column.getNextSortingOrder() === 'desc'
+                                                        ? 'Sort descending'
+                                                        : 'Clear sort'
+                                                : undefined
+                                        }
                                     >
                                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                                        {{
+                                            asc: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 transition-all opacity-0 group-hover:opacity-100">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                            </svg>
+                                            , desc: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 rotate-180 transition-all opacity-0 group-hover:opacity-100">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                            </svg>
+                                        }[header.column.getIsSorted()] ?? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 transition-all opacity-0 group-hover:opacity-100">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7.5 7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                                            </svg>
+                                        }
                                         <div
                                             {...{
                                                 onDoubleClick: () => header.column.resetSize(),
                                                 onMouseDown: header.getResizeHandler(),
+                                                onClick: (e) => {
+                                                    e.stopPropagation();
+                                                },
                                                 onTouchStart: header.getResizeHandler(),
                                                 className: `bg-base-content absolute w-[2px] top-0 cursor-col-resize h-full select-none transition-opacity resizer ${table.options.columnResizeDirection
                                                     } ${header.column.getIsResizing() ? 'isResizing' : ''}`,
