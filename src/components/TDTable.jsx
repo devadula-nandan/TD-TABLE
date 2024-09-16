@@ -48,7 +48,7 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                     </thead>
                     <tbody>
                         {rows.map((row) => (
-                            <tr key={row.id} className={`flex border-b-[1px] border-base-300 bg-base-100 transition-all group`}>
+                            <tr key={row.id} className={`flex border-b-[1px] border-base-300 bg-base-200 hover:bg-base-300 transition-all group`}>
                                 {row.getVisibleCells().map((cell) => (
                                     <td
                                         style={{ width: `calc(var(--col-${cell.column.id}-size) * 1px)` }}
