@@ -128,7 +128,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing, columnVisibility])
 
   return (
     <>
