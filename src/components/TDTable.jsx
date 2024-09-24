@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import './TDTable.css';
+import PaginationControls from './PaginationControls';
 
 export const TDTable = ({ table, setData, columnSizeVars }) => {
     const { pageIndex, pageSize } = table.getState().pagination;
@@ -9,8 +10,8 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
 
     return (
         <div>
-            <div className="overflow-x-auto w-full border-b-[1px] border-base-300">
-                <table className="text-sm border-[1px] border-base-300 font-mono w-full overflow-hidden" style={columnSizeVars}>
+            <div className="overflow-x-auto w-full border-base-300 bg-base-300">
+                <table className=" text-sm border-x-[1px] border-base-300 font-mono w-full overflow-hidden" style={columnSizeVars}>
                     <thead className="bg-base-300">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id} className="flex border-b-[1px] border-base-300">
@@ -18,8 +19,8 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                                     <th
                                         key={header.id}
                                         onMouseDown={header.column.getToggleSortingHandler()}
-                                        className={`flex items-center justify-between group relative text-left p-2 font-medium whitespace-nowrap text-ellipsis ${header.column.getCanSort() ? 'cursor-pointer' : ''}`}
-                                        style={{ width: `calc(var(--header-${header.id}-size) * 1px)` }}
+                                        className={`flex items-center justify-between group relative text-left py-2 pr-2 ml-1 pl-1 font-medium whitespace-nowrap text-ellipsis ${header.column.getCanSort() ? 'cursor-pointer' : ''}`}
+                                        style={{ width: `calc(${header.column.getSize()} * 1px + ${header.column.getCanSort() ? 20 : 0}px)` }}
                                         {...{ colSpan: header.colSpan }}
                                         title={
                                             header.column.getCanSort()
@@ -65,7 +66,7 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                                     </th>
                                 ))}
                                 <th key="flexer" className="flex-grow h-9"></th>
-                                <th key="actions" className="relative h-9 min-w-10 text-left p-2 font-medium whitespace-nowrap text-ellipsis" />
+                                <th key="actions" className="relative h-9 min-w-10 text-left  py-2 pr-2 ml-1 pl-1 font-medium whitespace-nowrap text-ellipsis" />
                             </tr>
                         ))}
                     </thead>
@@ -74,9 +75,9 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                             <tr key={row.id} className={`flex border-b-[1px] border-base-300 bg-base-200 hover:bg-base-300 transition-all group`}>
                                 {row.getVisibleCells().map((cell) => (
                                     <td
-                                        style={{ width: `calc(var(--col-${cell.column.id}-size) * 1px)` }}
+                                        style={{ width: `calc(${cell.column.getSize()} * 1px + ${cell.column.getCanSort() ? 20 : 0}px)` }}
                                         key={cell.id}
-                                        className={`p-2 text-ellipsis overflow-hidden ${cell.column.getIsResizing()
+                                        className={` py-2 pr-2 ml-1 pl-1 text-ellipsis overflow-hidden ${cell.column.getIsResizing()
                                             ? table.options.columnResizeDirection === 'rtl'
                                                 ? 'border-l-[1px] border-base-300'
                                                 : 'border-r-[1px] border-base-300'
@@ -84,7 +85,7 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                                             }`}
                                         title={cell.getValue()}
                                     >
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        <span className=" line-clamp-1 break-all">{flexRender(cell.column.columnDef.cell, cell.getContext())}</span>
                                     </td>
                                 ))}
                                 <td key="flexer" className="flex-grow h-9"></td>
@@ -118,8 +119,8 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
                                     {table.getVisibleFlatColumns().map((column) => (
                                         <td
                                             key={`empty-cell-${column.id}-${index}`}
-                                            className="p-2 text-ellipsis overflow-hidden"
-                                            style={{ width: `calc(var(--col-${column.id}-size) * 1px)` }}
+                                            className=" py-2 pr-2 ml-1 pl-1 text-ellipsis overflow-hidden"
+                                            style={{ width: `calc(${column.getSize()} * 1px + ${column.getCanSort() ? 20 : 0}px)` }}
                                         />
                                     ))}
                                     <td key="flexer" className="flex-grow h-9"></td>
@@ -134,27 +135,3 @@ export const TDTable = ({ table, setData, columnSizeVars }) => {
     );
 };
 
-const PaginationControls = ({ table }) => {
-    const { pageIndex, pageSize } = table.getState().pagination;
-    return (
-        <div className="pagination-controls">
-            <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
-                <svg className="size-2 rotate-180" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z"
-                        fill="currentColor"
-                    />
-                </svg>
-            </button>
-            <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} className="btn btn-sm hover:btn-primary h-8 w-8 px-2">
-                <svg className="size-2" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="m17.5 9.9964c0 .7756-.375 1.5262-1 2.0016l-10 7.5062c-.45.3252-.975.5004-1.5.5004-.375 0-.775-.0751-1.125-.2753-.85-.4253-1.375-1.301-1.375-2.2268v-15.01223c0-.95077.525-1.826489 1.375-2.226816.85-.425348 1.85-.3252667 2.625.225183l10 7.506133c.625.47538 1 1.20098 1 2.00163z"
-                        fill="currentColor"
-                    />
-                </svg>
-            </button>
-            <span className="px-2">Page {pageIndex + 1} of {table.getPageCount()}</span>
-        </div>
-    );
-};

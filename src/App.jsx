@@ -30,14 +30,14 @@ function App() {
         header: () => <span>Row Index</span>,
         cell: (info) => info.getValue(),
         size: maxDataWidth(data, 'rowIndex', 'Row Index'),
-        minSize: minHeaderWidth('Row Index', 20),
+        minSize: minHeaderWidth('Row Index'),
       },
       {
         accessorKey: 'firstName',
         header: () => <span>First Name</span>,
         cell: (info) => info.getValue(),
         size: maxDataWidth(data, 'firstName', 'First Name'),
-        minSize: minHeaderWidth('First Name', 20),
+        minSize: minHeaderWidth('First Name'),
       },
       {
         accessorFn: (row) => row.lastName,
@@ -45,51 +45,51 @@ function App() {
         cell: (info) => <i>{info.getValue()}</i>,
         header: () => <span>Last Name</span>,
         size: maxDataWidth(data, 'lastName', 'Last Name'),
-        minSize: minHeaderWidth('Last Name', 20),
+        minSize: minHeaderWidth('Last Name'),
       },
       {
         accessorKey: 'status',
         header: 'Status',
         size: maxDataWidth(data, 'status', 'Status'),
-        minSize: minHeaderWidth('Status', 20),
+        minSize: minHeaderWidth('Status'),
       },
       {
         accessorKey: 'joined',
         header: 'Joined',
         size: maxDataWidth(data, 'joined', 'Joined'),
-        minSize: minHeaderWidth('Joined', 20),
+        minSize: minHeaderWidth('Joined'),
       },
       {
         accessorKey: 'role',
         header: 'Role',
         size: maxDataWidth(data, 'role', 'Role'),
-        minSize: minHeaderWidth('Role', 20),
+        minSize: minHeaderWidth('Role'),
       },
       {
         accessorKey: 'password',
         header: 'Password',
         cell: () => '••••••••', // Mask password display
         size: maxDataWidth(data, 'password', 'Password'),
-        minSize: minHeaderWidth('Password', 20),
+        minSize: minHeaderWidth('Password'),
       },
       {
         accessorKey: 'passwordStrength',
         header: 'Password Strength',
         size: maxDataWidth(data, 'passwordStrength', 'Password Strength'),
-        minSize: minHeaderWidth('Password Strength', 20),
+        minSize: minHeaderWidth('Password Strength'),
       },
       {
         accessorKey: 'age',
         header: () => 'Age',
         cell: (info) => info.renderValue(),
         size: maxDataWidth(data, 'age', 'Age'),
-        minSize: minHeaderWidth('Age', 20),
+        minSize: minHeaderWidth('Age'),
       },
       {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
         size: maxDataWidth(data, 'visits', 'Visits'),
-        minSize: minHeaderWidth('Visits', 20),
+        minSize: minHeaderWidth('Visits'),
       },
       ...Array(7)
         .fill(0)
@@ -97,7 +97,7 @@ function App() {
           accessorKey: `person${index + 1}`,
           header: `Person ${index + 1}`,
           size: maxDataWidth(data, `person${index + 1}`, `Person ${index + 1}`),
-          minSize: minHeaderWidth(`Person ${index + 1}`, 20),
+          minSize: minHeaderWidth(`Person ${index + 1}`),
         })),
     ],
     [data]
@@ -141,7 +141,20 @@ function App() {
           columnVisibility={columnVisibility}
           setColumnVisibility={setColumnVisibility}
         />
-        <button className='btn btn-sm' onClick={(e) => data.length === 100000 ? setData(makeData(100)) : setData(makeData(100000))}>{data.length === 100000 ? 'Set to 100' : 'Set to 100000'}</button>
+        <input
+          type="number"
+          placeholder="Rows to Generate"
+          value={data.length}
+          className="input input-bordered input-primary input-sm" onChange={async (e) => {
+            if (data.length < e.target.value) {
+              setData([
+                ...data,
+                ...(await makeData(e.target.value - data.length, data.length)),
+              ])
+            } else {
+              setData(data.slice(0, e.target.value))
+            }
+          }} />
       </div>
       <Theme />
     </>

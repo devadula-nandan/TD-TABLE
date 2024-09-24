@@ -45,3 +45,17 @@
 table tr:last-child {
     border-bottom: none;
 }
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: oklch(var(--btn-color, var(--b3)) / var(--tw-bg-opacity)) !important;
+    border: none;
+}
+
+select:hover {
+    background-color: color-mix(in oklab,
+            oklch(var(--btn-color, var(--b2)) / var(--tw-border-opacity, 1)) 90%,
+            black) !important;
+}
