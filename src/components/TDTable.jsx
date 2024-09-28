@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import React, { useState } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import './TDTable.css';
 import PaginationControls from './PaginationControls';
