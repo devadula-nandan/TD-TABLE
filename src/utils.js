@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
 
-export function makeData(rowCount) {
+export function makeData(rowCount, startIndex = 0) {
   return Array.from({ length: rowCount }, (_, rowIndex) => ({
-    rowIndex: rowIndex + 1,
+    rowIndex: rowIndex + startIndex + 1,
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     status: faker.helpers.arrayElement([
