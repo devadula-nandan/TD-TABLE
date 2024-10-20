@@ -1,12 +1,11 @@
 {
-  "homepage": "https://devadula-nandan.github.io/TD-TABLE",  
+  "homepage": "https://devadula-nandan.github.io/TD-TABLE",
   "name": "td-table",
   "private": true,
   "version": "0.2.0",
   "description": "A template for Storybook React projects",
   "author": "nandan",
   "type": "module",
-
   "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "^9.0.2",
@@ -31,6 +30,7 @@
     "@storybook/addon-interactions": "^8.3.2",
     "@storybook/addon-links": "^8.3.2",
     "@storybook/blocks": "^8.3.2",
+    "@storybook/manager-api": "^8.3.6",
     "@storybook/react": "^8.3.2",
     "@storybook/react-vite": "^8.3.2",
     "@storybook/test": "^8.3.2",
@@ -46,6 +46,7 @@
     "msw-storybook-addon": "^2.0.3",
     "prop-types": "^15.8.1",
     "storybook": "^8.3.2",
+    "storybook-addon-data-theme-switcher": "^0.4.2",
     "vite": "^5.2.0"
   },
   "resolutions": {

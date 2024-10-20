@@ -1,0 +1,61 @@
+.resizer.ltr {
+    @apply right-0;
+}
+
+.resizer::after {
+    @apply content-[''] absolute z-[1] w-[1px] h-full bg-base-content cursor-col-resize right-[-1px];
+}
+
+.resizer::before {
+    @apply content-[''] absolute z-10 w-[7.2px] h-[7.2px] bg-base-content cursor-col-resize right-[-3.18px] top-1/2 translate-y-[-50%] rotate-45;
+
+}
+
+.resizer.rtl {
+    @apply left-0;
+}
+
+.resizer.isResizing {
+    @apply bg-primary opacity-100;
+}
+
+.resizer.isResizing::after,
+.resizer.isResizing::before {
+    @apply bg-primary;
+}
+
+.resizer {
+    @apply opacity-10;
+}
+
+*:hover>.resizer {
+    @apply opacity-100;
+}
+
+@media (hover: hover) {
+    .resizer {
+        @apply opacity-0;
+    }
+
+    *:hover>.resizer {
+        @apply opacity-100;
+    }
+}
+
+table tr:last-child {
+    border-bottom: none;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: oklch(var(--btn-color, var(--b3)) / var(--tw-bg-opacity)) !important;
+    border: none;
+}
+
+select:hover {
+    background-color: color-mix(in oklab,
+            oklch(var(--btn-color, var(--b2)) / var(--tw-border-opacity, 1)) 90%,
+            black) !important;
+}
