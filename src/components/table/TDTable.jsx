@@ -97,7 +97,7 @@ export const TDTable = ({ table, tableHeight, tableWidth, stickyHeader }) => {
                     </thead>
                     <tbody>
                         {rows.map((row) => (
-                            <tr key={row.id} className={`flex border-b-[1px] border-base-300 bg-base-200 hover:bg-base-300 transition-all`}>
+                            <tr key={row.id} className={`flex h-[37px] border-b-[1px] border-base-300 bg-base-200 hover:bg-base-300 transition-all ${Object.keys(row.original).length === 0 ? 'skeleton rounded-none' : ''}`}>
                                 {row.getVisibleCells().map((cell) => {
                                     return (
                                         <td

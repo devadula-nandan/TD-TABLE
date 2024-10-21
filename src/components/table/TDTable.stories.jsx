@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -46,7 +46,11 @@ const DEFAULTS = {
 
 const BaseTemplate = ({ tableHeight, tableWidth, stickyHeader }) => {
   const [sorting, setSorting] = React.useState([])
-  const [data, setData] = React.useState(() => makeData(100));
+  const [data, setData] = React.useState([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]); // empty objects render skeletons
+  useEffect(() => {
+    const timeout = setTimeout(() => setData(makeData(11)), 2000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   const columns = React.useMemo(
     () => [
@@ -96,7 +100,7 @@ const BaseTemplate = ({ tableHeight, tableWidth, stickyHeader }) => {
       {
         accessorKey: 'password',
         header: 'Password',
-        cell: (info) => <span className="line-clamp-1 break-all">{'•'.repeat(info.getValue().length)}</span>,
+        cell: (info) => <span className="line-clamp-1 break-all">{'•'.repeat(info.getValue()?.length)}</span>,
         size: maxDataWidth(data, 'password', 'Password'),
         minSize: minHeaderWidth('Password'),
       },
