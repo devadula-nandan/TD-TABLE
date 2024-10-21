@@ -5,7 +5,7 @@ import { flexRender } from '@tanstack/react-table';
 import PaginationControls from './PaginationControls';
 import { getCommonPinningStyles } from "./utils";
 
-export const TDTable = ({ table, tableHeight, stickyHeader }) => {
+export const TDTable = ({ table, tableHeight, tableWidth, stickyHeader }) => {
     const columnSizeVars = React.useMemo(() => {
         const headers = table.getFlatHeaders()
         const colSizes = {}
@@ -24,7 +24,7 @@ export const TDTable = ({ table, tableHeight, stickyHeader }) => {
 
     return (
         <div>
-            <div className="overflow-auto w-full border-base-300 bg-base-300 resize" style={{ maxHeight: tableHeight }}>
+            <div className="overflow-auto w-full border-base-300 bg-base-300 resize" style={{ height: tableHeight, width: tableWidth }}>
                 <table className={"text-sm border-x-[1px] border-base-300 font-mono w-full "} style={{ ...columnSizeVars }}>
                     <thead className={"bg-base-300 z-10" + (stickyHeader ? " sticky top-0" : "")}>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -164,6 +164,10 @@ TDTable.propTypes = {
      * Optional height of the table. If unset, it adapts to the content.
      */
     tableHeight: PropTypes.string,
+    /**
+     * Optional width of the table. If unset, it adapts to the content.
+     */
+    tableWidth: PropTypes.string,
     /**
      * Whether to enable sticky headers for the table
      */

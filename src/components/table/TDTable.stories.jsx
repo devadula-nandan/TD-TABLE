@@ -29,6 +29,10 @@ export default {
       control: 'text',
       description: 'Optional height of the table. If unset, it adapts to the content.',
     },
+    tableWidth: {
+      control: 'text',
+      description: 'Optional width of the table. If unset, it adapts to the content.',
+    },
     stickyHeader: {
       control: 'boolean',
       description: 'Whether to enable sticky headers for the table',
@@ -40,7 +44,7 @@ const DEFAULTS = {
   columnResizeMode: 'onChange',
 };
 
-const BaseTemplate = ({ tableHeight, stickyHeader }) => {
+const BaseTemplate = ({ tableHeight, tableWidth, stickyHeader }) => {
   const [sorting, setSorting] = React.useState([])
   const [data, setData] = React.useState(() => makeData(100));
 
@@ -120,6 +124,7 @@ const BaseTemplate = ({ tableHeight, stickyHeader }) => {
         .map((_, index) => ({
           accessorKey: `person${index + 1}`,
           header: `Person ${index + 1}`,
+          cell: (info) => <span className=" line-clamp-1 break-all">{info.getValue()}</span>,
           size: maxDataWidth(data, `person${index + 1}`, `Person ${index + 1}`),
           minSize: minHeaderWidth(`Person ${index + 1}`),
         })),
@@ -180,7 +185,7 @@ const BaseTemplate = ({ tableHeight, stickyHeader }) => {
 
   return (
     <>
-      <TDTable table={table} tableHeight={tableHeight} stickyHeader={stickyHeader} />
+      <TDTable table={table} tableHeight={tableHeight} tableWidth={tableWidth} stickyHeader={stickyHeader} />
     </>
   );
 };
