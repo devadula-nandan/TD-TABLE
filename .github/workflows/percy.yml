@@ -39,9 +39,11 @@ jobs:
       - name: Install Percy CLI
         run: yarn global add @percy/cli
 
-      # 7. Run Percy with Storybook (ensure Percy token is available)
+      # 7. Run Percy with Storybook
       - name: Run Percy visual tests
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }} # Percy token set in GitHub Secrets
         run: |
-          percy exec -- percy snapshot storybook-urls.txt
+          while IFS= read -r url; do
+            percy snapshot "$url"
+          done < storybook-urls.txt
