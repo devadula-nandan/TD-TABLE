@@ -1,7 +1,6 @@
 name: Percy Visual Regression Testing
 
 on:
-  # Triggers the workflow on push or pull request to main or other branches
   push:
     branches:
       - main
@@ -32,12 +31,17 @@ jobs:
       - name: Build Storybook
         run: yarn build-storybook
 
-      # 5. Install Percy CLI (global) for GitHub CI
+      # 5. Generate Storybook URLs
+      - name: Generate Storybook URLs
+        run: node scripts/storybookUrls.js
+
+      # 6. Install Percy CLI (global) for GitHub CI
       - name: Install Percy CLI
         run: yarn global add @percy/cli
 
-      # 6. Run Percy with Storybook
+      # 7. Run Percy with Storybook (ensure Percy token is available)
       - name: Run Percy visual tests
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }} # Percy token set in GitHub Secrets
-        run: percy exec -- percy snapshot ./storybook-static
+        run: |
+          percy exec -- percy snapshot storybook-urls.txt
