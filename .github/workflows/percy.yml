@@ -36,8 +36,8 @@ jobs:
       - name: Install Percy CLI
         run: yarn global add @percy/cli
 
-      # 6. Run Percy with Storybook (ensure Percy token is available)
+      # 6. Run Percy with Storybook
       - name: Run Percy visual tests
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }} # Percy token set in GitHub Secrets
-        run: percy storybook --storybook-build-dir ./storybook-static
+        run: percy exec -- percy snapshot ./storybook-static
