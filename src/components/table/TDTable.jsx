@@ -16,7 +16,7 @@ export const TDTable = ({ table, tableHeight, tableWidth, stickyHeader }) => {
         }
         return colSizes
     }, [table.getState().columnSizingInfo, table.getState().columnSizing, table.getVisibleFlatColumns()])
-    console.log(columnSizeVars);
+    // console.log(columnSizeVars);
 
     const { pageIndex, pageSize } = table.getState().pagination;
     const rows = table.getRowModel().rows;
@@ -33,7 +33,7 @@ export const TDTable = ({ table, tableHeight, tableWidth, stickyHeader }) => {
                                     <th
                                         key={header.id}
                                         onMouseDown={header.column.getToggleSortingHandler()}
-                                        className={`flex items-center justify-between group relative text-left p-2 font-medium whitespace-nowrap text-ellipsis ${header.column.getCanSort() ? 'cursor-pointer' : ''}`}
+                                        className={`flex items-center justify-between group hover:bg-base-content/10 relative text-left p-2 font-medium whitespace-nowrap text-ellipsis ${header.column.getCanSort() ? 'cursor-pointer' : ''}`}
                                         style={{
                                             ...getCommonPinningStyles(header.column),
                                             width: `calc(var(--header-${header.id}-size) * 1px)`,
@@ -77,7 +77,7 @@ export const TDTable = ({ table, tableHeight, tableWidth, stickyHeader }) => {
                                                 {...{
                                                     onDoubleClick: () => header.column.resetSize(),
                                                     onTouchStart: header.getResizeHandler(),
-                                                    className: `bg-base-content absolute w-[2px] top-0 cursor-col-resize h-full select-none transition-opacity resizer ${table.options.columnResizeDirection
+                                                    className: `bg-base-content absolute w-1 top-0 cursor-col-resize h-full select-none transition-opacity resizer ${table.options.columnResizeDirection
                                                         } ${header.column.getIsResizing() ? 'isResizing' : ''} ${header.column.getIsLastColumn() ? 'overflow-x-hidden' : ''}`,
                                                     style: {
                                                         transform:
