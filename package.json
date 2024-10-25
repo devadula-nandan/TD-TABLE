@@ -26,6 +26,7 @@
     "deploy": "gh-pages -d storybook-static"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^8.3.6",
     "@storybook/addon-essentials": "^8.3.2",
     "@storybook/addon-interactions": "^8.3.2",
     "@storybook/addon-links": "^8.3.2",
