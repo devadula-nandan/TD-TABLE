@@ -1,68 +1,54 @@
-name: TD-Table CI
+name: Percy Visual Regression Testing
 
 on:
+  # Triggers the workflow on push or pull request to the main branch
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-      - feat/percy-integration
+      - main
 
 jobs:
-  ci:
+  visual-regression:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # 1. Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # 2. Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20.x"
-          cache: yarn
+          node-version: 18
 
+      # 3. Install dependencies
       - name: Install dependencies
-        run: yarn
+        run: yarn install
 
-      - name: Install browsers for Playwright
-        run: yarn playwright install --with-deps
-
-      - name: Build project
-        run: yarn build
-
+      # 4. Build Storybook
       - name: Build Storybook
         run: yarn build-storybook
 
-      - name: Run Storybook
-        id: storybook
-        run: |
-          npx serve -l 3000 storybook-static/ &
-          echo "pid=$!" >> $GITHUB_ENV
+      # 5. Install Percy CLI (global) for GitHub CI
+      - name: Install Percy CLI
+        run: yarn global add @percy/cli
 
-      - name: Wait for Storybook to be Ready
-        run: |
-          for i in {1..30}; do
-            if curl -s http://localhost:3000 > /dev/null; then
-              echo "Storybook is up!"
-              break
-            else
-              echo "Waiting for Storybook..."
-              sleep 6
-            fi
-          done
-
-      # Percy visual regression tests
-      - name: Run Percy Storybook
-        working-directory: storybook-static
+      # 6. Run Percy with Storybook
+      - name: Run Percy visual tests
         env:
-          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }} # Percy token set in GitHub Secrets
         run: |
-          yarn percy exec -- yarn storybook -p 3001
+          percy exec -- yarn serve storybook-static &
+          sleep 5 # Give it some time to start
+          percy snapshot ./storybook-static
 
-      - name: Stop Storybook
-        run: kill ${{ env.pid }}
-
+      # 7. Optional: Upload test results
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: test-results
-          path: .playwright
+          name: percy-test-results
+          path: ./storybook-static
