@@ -34,11 +34,17 @@ jobs:
           npx serve -l 3000 storybook-static/ &
           echo "pid=$!" >> $GITHUB_ENV
 
-      - name: Wait for Storybook
-        uses: ./actions/wait-for-it
-        with:
-          URL: "http://localhost:3000"
-          timeout-minutes: 3
+      - name: Wait for Storybook to be Ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo "Storybook is up!"
+              break
+            else
+              echo "Waiting for Storybook..."
+              sleep 6
+            fi
+          done
 
       # Percy visual regression tests
       - name: Run Percy Storybook
