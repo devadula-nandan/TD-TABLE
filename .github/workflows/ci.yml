@@ -1,4 +1,4 @@
-name: TD-Table CI
+name: Percy Visual Regression Testing
 
 on:
   pull_request:
@@ -6,27 +6,20 @@ on:
       - feat/percy-integration
 
 jobs:
-  ci:
+  visual-regression:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: "20.x"
-          cache: yarn
 
       - name: Install dependencies
-        run: yarn
-
-      - name: Install browsers for Playwright
-        run: yarn playwright install --with-deps
-
-      - name: Build project
-        run: yarn build
+        run: yarn install
 
       - name: Build Storybook
         run: yarn build-storybook
@@ -34,34 +27,35 @@ jobs:
       - name: Run Storybook
         id: storybook
         run: |
-          npx serve -l 3000 storybook-static/ &
-          echo "pid=$!" >> $GITHUB_ENV
+          npx serve -l 3000 storybook-static &
+          pid=$!
+          echo "pid=$pid" >> $GITHUB_OUTPUT
 
-      - name: Wait for Storybook to be Ready
+      - name: Wait for Storybook to be ready
         run: |
-          for i in {1..30}; do
-            if curl -s http://127.0.0.1:3000 > /dev/null; then
-              echo "Storybook is up!"
-              break
-            else
-              echo "Waiting for Storybook..."
-              sleep 6
+          retries=5  
+          until curl -s http://localhost:3000 > /dev/null; do
+            ((retries--))
+            if [ $retries -le 0 ]; then
+              echo "Storybook server failed to start in time"
+              exit 1
             fi
+            echo "Waiting for Storybook to start..."
+            sleep 5
           done
+          echo "Storybook is ready!"
 
-      # Percy visual regression tests
-      - name: Run Percy Storybook
-        working-directory: storybook-static
+      - name: Install Percy CLI
+        run: yarn global add @percy/cli
+
+      - name: Run Percy visual tests
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-        run: yarn percy storybook http://127.0.0.1:3000
-
-      - name: Stop Storybook
-        run: kill ${{ env.pid }}
+        run: yarn percy storybook http://localhost:3000
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: test-results
-          path: .playwright
+          name: percy-test-results
+          path: ./storybook-static
