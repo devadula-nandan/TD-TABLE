@@ -10,36 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "20.x"
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: yarn install
 
-      # 4. Build Storybook
       - name: Build Storybook
         run: yarn build-storybook
 
-      # 5. Install Percy CLI (global) for GitHub CI
       - name: Install Percy CLI
         run: yarn global add @percy/cli
 
-      # 6. Run Percy snapshots directly from the static Storybook build
       - name: Run Percy visual tests
         env:
-          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }} # Percy token set in GitHub Secrets
-        run: |
-          percy exec -- percy snapshot ./storybook-static
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+        run: yarn percy storybook http://localhost:3000
 
-      # 7. Optional: Upload test results
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3
