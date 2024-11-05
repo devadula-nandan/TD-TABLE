@@ -1,4 +1,4 @@
-name: Hello World CI
+name: CI and Percy Visual Regression Testing
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+      - feat/percy-integration
 
 jobs:
   hello-world:
@@ -27,3 +28,58 @@ jobs:
 
       - name: Run Hello World Script
         run: echo "Hello, World!"
+
+  visual-regression:
+    runs-on: ubuntu-latest
+    needs: hello-world # Ensure this runs after hello-world job
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Storybook
+        run: yarn build-storybook
+
+      - name: Run Storybook
+        id: storybook
+        run: |
+          npx serve -l 3000 storybook-static &
+          pid=$!
+          echo "pid=$pid" >> $GITHUB_OUTPUT
+
+      - name: Wait for Storybook to be ready
+        run: |
+          retries=5  
+          until curl -s http://localhost:3000 > /dev/null; do
+            ((retries--))
+            if [ $retries -le 0 ]; then
+              echo "Storybook server failed to start in time"
+              exit 1
+            fi
+            echo "Waiting for Storybook to start..."
+            sleep 5
+          done
+          echo "Storybook is ready!"
+
+      - name: Install Percy CLI
+        run: yarn global add @percy/cli
+
+      - name: Run Percy visual tests
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+        run: yarn percy storybook storybook-static
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: percy-test-results
+          path: ./storybook-static
