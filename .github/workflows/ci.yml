@@ -25,9 +25,9 @@ jobs:
         run: yarn build-storybook
 
       - name: Start Storybook
-        run: yarn storybook -p 3000 &
-        # Wait a few seconds to ensure Storybook is up
-        run: sleep 5
+        run: |
+          yarn storybook -p 3000 &
+          sleep 5
 
       - name: Install Percy CLI
         run: yarn global add @percy/cli
