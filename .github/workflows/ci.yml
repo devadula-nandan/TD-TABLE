@@ -24,10 +24,12 @@ jobs:
       - name: Build Storybook
         run: yarn build-storybook
 
-      - name: Start Storybook
+      - name: Run storybook
+        id: storybook
         run: |
-          yarn storybook -p 3000 &
-          sleep 5
+          npx serve -l 3000 storybook-static &
+          pid=$!
+          echo "pid=$pid" >> $GITHUB_OUTPUT
 
       - name: Install Percy CLI
         run: yarn global add @percy/cli
