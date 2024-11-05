@@ -13,6 +13,6 @@ export default {
 export const Primary = {
   args: {
     label: "Button",
-    className: "btn btn-accent btn-sm text-primary-content",
+    className: "btn btn-primary btn-sm text-primary-content",
   },
 };
