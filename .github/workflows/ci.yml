@@ -20,7 +20,7 @@ jobs:
           cache: yarn
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn
 
       - name: Install browsers for Playwright
         run: yarn playwright install --with-deps
@@ -31,10 +31,10 @@ jobs:
       - name: Build Storybook
         run: yarn build-storybook
 
-      - name: Start Storybook
+      - name: Run Storybook
         id: storybook
         run: |
-          npx serve -l 3000 ./storybook-static &
+          npx serve -l 3000 storybook-static/ &
           echo "pid=$!" >> $GITHUB_ENV
 
       - name: Wait for Storybook to be Ready
@@ -49,12 +49,12 @@ jobs:
             fi
           done
 
-      # Run Percy with Storybook
-      - name: Run Percy Visual Tests
+      # Percy visual regression tests
+      - name: Run Percy Storybook
+        working-directory: storybook-static
         env:
-          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }} # Percy token set in GitHub Secrets
-        run: |
-          percy exec -- yarn percy snapshot ./storybook-static
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+        run: yarn percy storybook http://localhost:3000
 
       - name: Stop Storybook
         run: kill ${{ env.pid }}
