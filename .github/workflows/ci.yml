@@ -1,15 +1,12 @@
-name: Hello World CI
+name: TD-Table CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
-      - main
+      - feat/percy-integration
 
 jobs:
-  hello-world:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,5 +22,46 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Run Hello World Script
-        run: echo "Hello, World!"
+      - name: Install browsers for Playwright
+        run: yarn playwright install --with-deps
+
+      - name: Build project
+        run: yarn build
+
+      - name: Build Storybook
+        run: yarn build-storybook
+
+      - name: Run Storybook
+        id: storybook
+        run: |
+          npx serve -l 3000 storybook-static/ &
+          echo "pid=$!" >> $GITHUB_ENV
+
+      - name: Wait for Storybook to be Ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo "Storybook is up!"
+              break
+            else
+              echo "Waiting for Storybook..."
+              sleep 6
+            fi
+          done
+
+      # Percy visual regression tests
+      - name: Run Percy Storybook
+        working-directory: storybook-static
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+        run: yarn percy storybook http://localhost:3000
+
+      - name: Stop Storybook
+        run: kill ${{ env.pid }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: .playwright
