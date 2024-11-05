@@ -24,12 +24,26 @@ jobs:
       - name: Build Storybook
         run: yarn build-storybook
 
-      - name: Run storybook
+      - name: Run Storybook
         id: storybook
         run: |
           npx serve -l 3000 storybook-static &
           pid=$!
           echo "pid=$pid" >> $GITHUB_OUTPUT
+
+      - name: Wait for Storybook to be ready
+        run: |
+          retries=5  
+          until curl -s http://localhost:3000 > /dev/null; do
+            ((retries--))
+            if [ $retries -le 0 ]; then
+              echo "Storybook server failed to start in time"
+              exit 1
+            fi
+            echo "Waiting for Storybook to start..."
+            sleep 5
+          done
+          echo "Storybook is ready!"
 
       - name: Install Percy CLI
         run: yarn global add @percy/cli
