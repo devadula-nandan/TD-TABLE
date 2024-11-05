@@ -54,7 +54,8 @@ jobs:
         working-directory: storybook-static
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-        run: yarn percy storybook http://localhost:3000
+        run: |
+          yarn percy exec -- yarn storybook --port 3000
 
       - name: Stop Storybook
         run: kill ${{ env.pid }}
