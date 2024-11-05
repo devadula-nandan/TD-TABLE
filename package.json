@@ -26,6 +26,9 @@
     "deploy": "gh-pages -d storybook-static"
   },
   "devDependencies": {
+    "@percy/cli": "^1.28.7",
+    "@percy/playwright": "^1.0.5",
+    "@percy/storybook": "^6.0.0",
     "@storybook/addon-actions": "^8.3.6",
     "@storybook/addon-essentials": "^8.3.2",
     "@storybook/addon-interactions": "^8.3.2",
