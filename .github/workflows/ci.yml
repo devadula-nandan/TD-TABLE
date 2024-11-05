@@ -51,7 +51,7 @@ jobs:
       - name: Run Percy visual tests
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-        run: yarn percy storybook http://localhost:3000
+        run: yarn percy storybook storybook-static
 
       - name: Upload test results
         if: always()
