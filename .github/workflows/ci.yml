@@ -55,7 +55,7 @@ jobs:
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
         run: |
-          yarn percy exec -- yarn storybook --port 3000
+          yarn percy exec -- yarn storybook -p 3001
 
       - name: Stop Storybook
         run: kill ${{ env.pid }}
