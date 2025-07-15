@@ -1,6 +1,0 @@
-import{f as l}from"./index-C_FWhylE.js";import{j as p}from"./jsx-runtime-DEdD30eg.js";import"./index-RYns6xqu.js";import{P as t}from"./index-rNTiGNI1.js";const r=({label:o,className:i="",onClick:m=void 0,...c})=>p.jsx("button",{type:"button",className:`btn ${i}`,onClick:m,...c,children:o});r.propTypes={label:t.string.isRequired,className:t.string,onClick:t.func};r.__docgenInfo={description:"Primary UI component for user interaction",methods:[],displayName:"Button",props:{className:{defaultValue:{value:"''",computed:!1},description:"Additional class names for DaisyUI styling",type:{name:"string"},required:!1},onClick:{defaultValue:{value:"undefined",computed:!0},description:"Optional click handler",type:{name:"func"},required:!1},label:{description:"Button contents",type:{name:"string"},required:!0}}};const b={title:"Example/Button",component:r,parameters:{layout:"centered"},args:{onClick:l()}},e={args:{label:"Button",className:"btn btn-primary btn-sm text-primary-content"}};var n,a,s;e.parameters={...e.parameters,docs:{...(n=e.parameters)==null?void 0:n.docs,source:{originalSource:`{
-  args: {
-    label: "Button",
-    className: "btn btn-primary btn-sm text-primary-content"
-  }
-}`,...(s=(a=e.parameters)==null?void 0:a.docs)==null?void 0:s.source}}};const g=["Primary"];export{e as Primary,g as __namedExportsOrder,b as default};
