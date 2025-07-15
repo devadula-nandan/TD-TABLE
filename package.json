@@ -23,7 +23,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "init-msw": "msw init public/",
-    "deploy": "gh-pages -d dist"
+    "deploy": "yarn build-storybook && gh-pages -d storybook-static"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^8.3.6",
