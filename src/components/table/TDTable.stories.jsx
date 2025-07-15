@@ -47,7 +47,7 @@ const BaseTemplate = React.memo(({ tableHeight, tableWidth, stickyHeader }) => {
   const [data, setData] = React.useState([{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]); // empty objects render skeletons
 
   useEffect(() => {
-    const timeout = setTimeout(() => setData(makeData(200)), 2000);
+    const timeout = setTimeout(() => setData(makeData(10)), 2000);
     return () => clearTimeout(timeout);
   }, []);
 
